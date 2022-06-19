@@ -1,0 +1,1 @@
+Tutorial for Rabbit MQ from official site https://rabbitmq.com/getstarted.html
