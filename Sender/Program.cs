@@ -19,18 +19,23 @@ namespace Sender
                     arguments: null);
 
                 string message = "Hello World!";
-                var body = Encoding.UTF8.GetBytes(message);
+                while (!string.Equals(message, ""))
+                {
+                    var body = Encoding.UTF8.GetBytes(message);
 
-                channel.BasicPublish(exchange: "",
-                    routingKey: "hello",
-                    basicProperties: null,
-                    body: body);
+                    channel.BasicPublish(exchange: "",
+                        routingKey: "hello",
+                        basicProperties: null,
+                        body: body);
 
-                Console.WriteLine(" [x] Sent {0}", message);
+                    Console.WriteLine(" [x] Sent {0}", message);
+                    Console.WriteLine(" Enter a word to send and press [enter]. To exit just press [enter]:");
+                    message = Console.ReadLine();
+                }
             }
 
-            Console.WriteLine(" Press [enter] to exit.");
-            Console.ReadLine();
+            //Console.WriteLine(" Press [enter] to exit.");
+            //Console.ReadLine();
         }
     }
 }
