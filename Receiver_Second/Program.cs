@@ -1,10 +1,8 @@
-﻿using System;
-using System.Security.Authentication.ExtendedProtection;
+﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 
 namespace Receiver
 {
@@ -12,8 +10,8 @@ namespace Receiver
     {
         public static void Main(string[] args)
         {
-            var factory = new ConnectionFactory() {HostName = "localhost"};
-            using(var connection = factory.CreateConnection())
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: "task_queue",
@@ -22,7 +20,7 @@ namespace Receiver
                     autoDelete: false,
                     arguments: null);
 
-                channel.BasicQos(prefetchSize:0, prefetchCount: 1, global: false);
+                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
@@ -32,9 +30,8 @@ namespace Receiver
                     Console.WriteLine(" [x] Received:  {0}", message);
 
                     int dots = message.Split('.').Length - 1;
-
+                    Console.WriteLine(" [x] Sleep {0} sec.", dots);
                     Thread.Sleep(dots * 1000);
-
                     Console.WriteLine(" [x] Done");
 
                     channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

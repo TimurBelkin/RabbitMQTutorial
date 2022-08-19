@@ -31,9 +31,8 @@ namespace Receiver
                     Console.WriteLine(" [x] Received:  {0}", message);
 
                     int dots = message.Split('.').Length - 1;
-
+                    Console.WriteLine(" [x] Sleep {0} sec.", dots);
                     Thread.Sleep(dots * 1000);
-
                     Console.WriteLine(" [x] Done");
 
                     channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
