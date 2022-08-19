@@ -2,7 +2,6 @@
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
-using System.Threading;
 
 namespace Receiver
 {
@@ -11,37 +10,30 @@ namespace Receiver
         public static void Main(string[] args)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
-            using var connection = factory.CreateConnection();
-            using var channel = connection.CreateModel();
-            channel.QueueDeclare(queue: "task_queue",
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
-
-            channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) =>
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine(" [x] Received:  {0}", message);
+                channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
+                var queueName = channel.QueueDeclare().QueueName;
+                channel.QueueBind(queue: queueName,
+                    exchange: "logs",
+                    routingKey: "");
 
-                int dots = message.Split('.').Length - 1;
-                Console.WriteLine(" [x] Sleep {0} sec.", dots);
-                Thread.Sleep(dots * 1000);
-                Console.WriteLine(" [x] Done");
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, ea) =>
+                {
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    Console.WriteLine(" [x] Received:  {0}", message);
+                };
 
-                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-            };
+                channel.BasicConsume(queue: queueName,
+                    autoAck: true,
+                    consumer: consumer);
 
-            channel.BasicConsume(queue: "task_queue",
-                autoAck: false,
-                consumer: consumer);
-
-            Console.WriteLine(" Press [enter] to exit");
-            Console.ReadLine();
+                Console.WriteLine(" Press [enter] to exit");
+                Console.ReadLine();
+            }
         }
     }
 }
