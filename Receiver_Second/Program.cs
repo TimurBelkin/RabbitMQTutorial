@@ -3,7 +3,7 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Text;
 
-namespace Receiver
+namespace Receiver_Second
 {
     class Program
     {
