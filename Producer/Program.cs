@@ -6,7 +6,7 @@ namespace Producer
 {
     class Program
     {
-        private const string ExchangeName = "direct_logs";
+        private const string ExchangeName = "topics_logs";
         private const string HostName = "localhost";
 
         // Format  of inputting is %word% %routing key%
@@ -16,7 +16,7 @@ namespace Producer
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
-            channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct);
+            channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Topic);
 
             string message = Console.ReadLine();
             while (!string.IsNullOrEmpty(message))

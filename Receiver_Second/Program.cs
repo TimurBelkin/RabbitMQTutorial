@@ -7,9 +7,9 @@ namespace Receiver
 {
     class Program
     {
-        private const string ExchangeName = "direct_logs";
-        private const string RoutingKeyFirst = "1";
-        private const string RoutingKeySecond = "3";
+        private const string ExchangeName = "topics_logs";
+        private const string RoutingKeyFirst = "*.*.rabbit";
+        private const string RoutingKeySecond = "lazy.#";
         private const string HostName = "localhost";
 
         public static void Main(string[] args)
@@ -18,7 +18,7 @@ namespace Receiver
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct);
+                channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Topic);
                 var queueName = channel.QueueDeclare().QueueName;
                 channel.QueueBind(queue: queueName,
                     exchange: ExchangeName,
@@ -39,8 +39,10 @@ namespace Receiver
                 channel.BasicConsume(queue: queueName,
                     autoAck: true,
                     consumer: consumer);
-
+                                
                 Console.WriteLine(" Press [enter] to exit");
+                Console.WriteLine(" Routing key: {0}", RoutingKeyFirst);
+                Console.WriteLine(" Routing key: {0}", RoutingKeySecond);
                 Console.ReadLine();
             }
         }
