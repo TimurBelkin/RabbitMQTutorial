@@ -18,6 +18,9 @@ namespace Receiver
                 channel.QueueBind(queue: queueName,
                     exchange: "direct_logs",
                     routingKey: "1");
+                channel.QueueBind(queue: queueName,
+                    exchange: "direct_logs",
+                    routingKey: "3");
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
