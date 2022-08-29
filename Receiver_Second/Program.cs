@@ -7,20 +7,25 @@ namespace Receiver
 {
     class Program
     {
+        private const string ExchangeName = "direct_logs";
+        private const string RoutingKeyFirst = "1";
+        private const string RoutingKeySecond = "3";
+        private const string HostName = "localhost";
+
         public static void Main(string[] args)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = HostName };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: "direct_logs", type: ExchangeType.Direct);
+                channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct);
                 var queueName = channel.QueueDeclare().QueueName;
                 channel.QueueBind(queue: queueName,
-                    exchange: "direct_logs",
-                    routingKey: "1");
+                    exchange: ExchangeName,
+                    routingKey: RoutingKeyFirst);
                 channel.QueueBind(queue: queueName,
-                    exchange: "direct_logs",
-                    routingKey: "3");
+                    exchange: ExchangeName,
+                    routingKey: RoutingKeySecond);
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>

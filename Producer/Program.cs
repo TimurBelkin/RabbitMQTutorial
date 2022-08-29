@@ -6,20 +6,24 @@ namespace Producer
 {
     class Program
     {
+        private const string ExchangeName = "direct_logs";
+        private const string HostName = "localhost";
+
+        // Format  of inputting is %word% %routing key%
         public static void Main(string[] args)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = HostName };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
-            channel.ExchangeDeclare(exchange: "direct_logs", type: ExchangeType.Direct);
+            channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct);
 
             string message = Console.ReadLine();
             while (!string.IsNullOrEmpty(message))
             {
                 string[] input = message?.Split(' ');
                 var body = Encoding.UTF8.GetBytes(input[0]);
-                channel.BasicPublish(exchange: "direct_logs",
+                channel.BasicPublish(exchange: ExchangeName,
                     routingKey: input[1],
                     basicProperties: null,
                     body: body);
