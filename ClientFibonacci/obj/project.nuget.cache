@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "iLkX43XAOsXanPm9y/369GZGdsplCx8OBuJhSdKR/UEvRAvI59VxVYcpLWJcMRCKmQFTrdeoG0kJaZfYp/vD1w==",
+  "success": true,
+  "projectFilePath": "D:\\Repos\\RabbitMQTutorial\\ClientFibonacci\\ClientFibonacci.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Timur\\.nuget\\packages\\rabbitmq.client\\6.4.0\\rabbitmq.client.6.4.0.nupkg.sha512",
+    "C:\\Users\\Timur\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\Timur\\.nuget\\packages\\system.threading.channels\\4.7.1\\system.threading.channels.4.7.1.nupkg.sha512"
+  ],
+  "logs": []
+}
